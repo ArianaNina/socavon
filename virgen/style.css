@@ -1,0 +1,139 @@
+/* ==============CANVAS===================== */
+canvas{
+    display:block;
+}
+
+/* ======TÍTULo===================== */
+#titulo{
+
+    position:absolute;
+
+    left:5%;
+
+    top:18%;
+
+    z-index:10;
+
+    color:white;
+
+    font-family:"Montserrat", sans-serif;
+
+    font-weight:900;
+
+    font-size:clamp(38px, 4.5vw, 70px);
+
+    line-height:1.02;
+
+    letter-spacing:-2px;
+
+    text-align:left;
+
+    text-shadow:
+        3px 3px 6px rgba(0,0,0,0.7);
+}
+
+
+#titulo span{
+    display:block;
+}
+
+
+/* LA VIRGEN → GRANDE */
+
+#titulo .virgen{
+    font-size:1.35em;
+    transform:translateX(20px);
+}
+
+
+/* DEL → PEQUEÑO */
+
+#titulo .del{
+    font-size:0.70em;
+       transform:translateX(22px);
+}
+
+/* SOCAVÓN → NORMAL */
+
+#titulo .socavon{
+    font-size:1em;
+       transform:translateX(15px);
+}
+
+#titulo span{
+
+    display:block;
+
+}
+
+.boton-inicio{
+    position:fixed;
+
+    top:25px;
+    right:30px;
+
+    width:105px;
+    height:45px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(255,255,255,0.18);
+
+    border:1px solid rgba(255,255,255,0.9);
+
+    border-radius:30px;
+
+color:white;
+
+    text-decoration:none;
+
+    font-family:Arial,sans-serif;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    z-index:9999;
+
+    box-sizing:border-box;
+}
+/* =======LOGO ORURO BOLIVIA ============ */
+
+.encabezado{
+    position:fixed;
+
+    top:20px;
+    left:25px;
+
+    z-index:9999;
+}
+
+.logo{
+    font-family:Arial, sans-serif;
+
+    font-size:23px;
+
+    font-weight:900;
+
+    letter: spacing -1px;;
+
+    white-space:nowrap;
+}
+
+.oruro{
+    color:white;
+}
+
+.bo{
+    color:red;
+}
+
+.li{
+    color:yellow;
+}
+
+.via{
+    color:#00ff00;
+}
