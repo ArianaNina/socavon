@@ -2022,7 +2022,7 @@ crearFarol(
 // =================================================
 
 let personaje;
-
+let baseVirgen=null;
 let mixerPersonaje;
 
 const teclas={};
@@ -2169,6 +2169,15 @@ obj.receiveShadow=true;
 scene.add(
 model
 );
+
+// Zona grande para tocar la base
+baseVirgen=new THREE.Mesh(
+  new THREE.CylinderGeometry(1.8,1.8,1.2,48),
+  new THREE.MeshBasicMaterial({transparent:true,opacity:0})
+);
+baseVirgen.position.set(-0.5,0.45,0);
+scene.add(baseVirgen);
+
 
 },
 undefined,
@@ -2794,6 +2803,8 @@ mouse,
 camera
 );
 
+
+
 const objetos=[
 floor,
 caminoVerde,
@@ -2852,6 +2863,20 @@ raycaster.setFromCamera(
 mouse,
 camera
 );
+// Clic en la base de la Virgen
+const clicBaseVirgen=
+raycaster.intersectObject(
+baseVirgen,
+false
+);
+
+if(clicBaseVirgen.length>0){
+
+window.location.href="https://ariananina.github.io/museo/";
+
+return;
+
+}
 
 const objetos=[
 floor,
