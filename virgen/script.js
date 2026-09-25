@@ -13,6 +13,8 @@ const textureLoader=new THREE.TextureLoader();
 scene.background=
 textureLoader.load("./fon.jpg");
 
+
+
 // =================================================
 // CÁMARA
 // =================================================
@@ -28,7 +30,7 @@ window.innerWidth/window.innerHeight,
 // Cámara más cerca desde el inicio
 camera.position.set(
 0,
-2.10,
+1.20,
 7
 );
 
@@ -119,7 +121,7 @@ Math.PI/2-0.05;
 // Punto inicial
 controls.target.set(
 0,
-0.8,
+0.3,
 0.2
 );
 
@@ -903,7 +905,7 @@ borde.rotation.x=
 -Math.PI/2;
 
 borde.position.y=
--1.18;
+-1.19;
 
 scene.add(borde);
 
@@ -917,7 +919,7 @@ figura.rotation.x=
 -Math.PI/2;
 
 figura.position.y=
--1.19;
+-1.17;
 
 scene.add(figura);
 
@@ -1448,7 +1450,7 @@ caminoVerde.scale.set(
 
 caminoVerde.position.set(
 -0.5,
--0.7,
+-0.75,
 2
 );
 
@@ -2025,13 +2027,24 @@ let personaje;
 let baseVirgen=null;
 let mixerPersonaje;
 
+// POSICIÓN DEL BOTÓN SOBRE LA BASE
+const posicionBotonMuseo =
+new THREE.Vector3(
+    -0.5,
+    0.20,
+    0.45
+);
+
+const puntoPantallaBoton =
+new THREE.Vector3();
+
 const teclas={};
 
 // VELOCIDADES
 
 const velocidadJugador=0.035;
 
-const velocidadHormiga=0.028;
+const velocidadHormiga=0.035;
 
 // JUGADOR INVISIBLE
 
@@ -2178,7 +2191,6 @@ baseVirgen=new THREE.Mesh(
 baseVirgen.position.set(-0.5,0.45,0);
 scene.add(baseVirgen);
 
-
 },
 undefined,
 function(){
@@ -2226,9 +2238,9 @@ personaje.scale.set(
 );
 
 personaje.position.set(
--1.2,
--0.65,
-1.2
+    -2.0,
+    -0.55,
+    1.9
 );
 
 personaje.rotation.y=0;
@@ -2583,6 +2595,12 @@ distancia>0.12
 ){
 
 direccionHormiga.normalize();
+// LA HORMIGA MIRA DE FRENTE
+personaje.rotation.y =
+    Math.atan2(
+        -direccionHormiga.z,
+        direccionHormiga.x
+    );
 
 const velocidad=
 Math.min(
@@ -2617,11 +2635,6 @@ nuevaZ;
 
 }
 
-personaje.rotation.y=
-Math.atan2(
-direccionHormiga.x,
-direccionHormiga.z
-);
 
 }
 
@@ -2716,12 +2729,11 @@ nuevaZ;
 if(
 distancia>0.01
 ){
-
-personaje.rotation.y=
-Math.atan2(
-direccionHormiga.x,
-direccionHormiga.z
-);
+    personaje.rotation.y =
+        Math.atan2(
+            -direccionHormiga.z,
+            direccionHormiga.x
+        );
 
 }
 
@@ -2817,6 +2829,8 @@ objetos,
 false
 );
 
+
+
 if(
 intersecciones.length>0
 ){
@@ -2863,20 +2877,6 @@ raycaster.setFromCamera(
 mouse,
 camera
 );
-// Clic en la base de la Virgen
-const clicBaseVirgen=
-raycaster.intersectObject(
-baseVirgen,
-false
-);
-
-if(clicBaseVirgen.length>0){
-
-window.location.href="https://ariananina.github.io/museo/";
-
-return;
-
-}
 
 const objetos=[
 floor,
@@ -2915,6 +2915,14 @@ x,
 -0.6,
 z
 );
+
+// GIRAR LA HORMIGA HACIA EL LUGAR DEL CLIC
+const dx=x-personaje.position.x;
+const dz=z-personaje.position.z;
+
+personaje.rotation.y=
+Math.atan2(dx,dz);
+
 
 jugador.set(
 x,
@@ -2966,6 +2974,7 @@ e.key.toLowerCase()
 }
 );
 
+
 window.addEventListener(
 "keyup",
 function(e){
@@ -2978,9 +2987,106 @@ e.key.toLowerCase()
 );
 
 // =================================================
-// FAROL CON ESFERA PARA BARANDA
+// BOTÓN HTML - ENTRAR AL MUSEO
 // =================================================
 
+const btnMuseo =
+document.getElementById("btnMuseo");
+
+// =================================================
+// BOTÓN DÍA / NOCHE
+// =================================================
+
+const btnNoche =
+document.getElementById("btnNoche");
+
+let esNoche=false;
+
+btnNoche.addEventListener(
+    "click",
+    function(){
+
+        if(!esNoche){
+
+            // =========================
+            // NOCHE
+            // =========================
+
+            scene.background =
+            textureLoader.load("./fonNoche.jpg");
+
+            // ENCENDER TODAS LAS BOLITAS
+            lucesBolita.forEach(
+                function(luz){
+
+                    luz.intensity=120;
+
+                }
+            );
+
+            btnNoche.textContent="☀️ DÍA";
+
+            esNoche=true;
+
+        }else{
+
+            // =========================
+            // DÍA
+            // =========================
+
+            scene.background =
+            textureLoader.load("./fon.jpg");
+
+            // APAGAR TODAS LAS BOLITAS
+            lucesBolita.forEach(
+                function(luz){
+
+                    luz.intensity=0;
+
+                }
+            );
+
+            btnNoche.textContent="🌙 NOCHE";
+
+            esNoche=false;
+
+        }
+
+    }
+);
+
+// OCULTAR BOTÓN AL INICIO
+btnMuseo.style.display = "none";
+
+btnMuseo.addEventListener(
+    "click",
+    function(){
+
+        window.location.href =
+        "https://ariananina.github.io/museo/";
+
+    }
+);
+
+
+// =================================================
+// DOBLE CLIC
+// =================================================
+
+renderer.domElement.addEventListener(
+    "dblclick",
+    function(){
+
+        recorriendoRuta=true;
+
+        puntoRutaActual=0;
+
+    }
+);
+// =================================================
+// FAROL CON ESFERA PARA BARANDA
+// =================================================
+const lucesBolita=[];
 function crearFarolBaranda(x,y,z){
 
 const farolBaranda=new THREE.Group();
@@ -2993,8 +3099,10 @@ shininess:80
 
 // Material blanco
 const blancoBaranda=new THREE.MeshPhongMaterial({
-color:0xffffff,
-shininess:100
+    color:0x666666,
+    emissive:0x000000,
+    emissiveIntensity:0,
+    shininess:10
 });
 
 // Poste
@@ -3054,15 +3162,18 @@ blancoBaranda
 esferaBaranda.position.y=1.25;
 farolBaranda.add(esferaBaranda);
 
-// Luz
+// Luz de la bolita
 const luzBaranda=new THREE.PointLight(
-0xffeecc,
-1.5,
-3
+    0xffeecc,
+    4,
+    4
 );
 
 luzBaranda.position.y=1.25;
+
 farolBaranda.add(luzBaranda);
+
+lucesBolita.push(luzBaranda);
 
 // Posición
 farolBaranda.position.set(
@@ -3146,12 +3257,77 @@ crearFarolBaranda(-1.47,-1.18,17.20);
 crearFarolBaranda(-1.54,-1.18,15.70);
 crearFarolBaranda(-1.59,-1.18,14.20);
 
+function colocarBotonMuseo(){
+
+    if(!btnMuseo || !personaje){
+        return;
+    }
+
+    // ==========================================
+    // DISTANCIA ENTRE HORMIGA Y VIRGEN
+    // ==========================================
+
+    const distancia =
+        personaje.position.distanceTo(
+            posicionBotonMuseo
+        );
+
+    // ==========================================
+    // SI LA HORMIGA ESTA CERCA
+    // ==========================================
+
+    if(distancia < 1.5){
+
+        // MOSTRAR BOTON
+        btnMuseo.style.display = "block";
+
+        // POSICION DEL BOTON
+        puntoPantallaBoton.set(
+            -0.5,
+            -0.65,
+            0.45
+        );
+
+        // CONVERTIR 3D A PANTALLA
+        puntoPantallaBoton.project(camera);
+
+        const x =
+            (puntoPantallaBoton.x * 0.5 + 0.5)
+            * window.innerWidth;
+
+        const y =
+            (-puntoPantallaBoton.y * 0.5 + 0.5)
+            * window.innerHeight;
+
+        btnMuseo.style.left =
+            x + "px";
+
+        btnMuseo.style.top =
+            y + "px";
+
+        // TAMAÑO FIJO
+        btnMuseo.style.width = "200px";
+        btnMuseo.style.height = "50px";
+
+        btnMuseo.style.transform =
+            "translate(-50%, -50%)";
+
+        btnMuseo.style.scale = "1";
+
+    }else{
+
+        // HORMIGA LEJOS
+        // OCULTAR BOTON
+
+        btnMuseo.style.display = "none";
+    }
+}
+
 // =================================================
 // ANIMACIÓN
 // =================================================
 
 function animate(){
-
 requestAnimationFrame(
 animate
 );
@@ -3200,6 +3376,9 @@ pointLight.position.y=4;
 
 // Controles
 controls.update();
+
+// BOTÓN SIGUE LA BASE DE LA VIRGEN
+colocarBotonMuseo();
 
 // Render
 renderer.render(
