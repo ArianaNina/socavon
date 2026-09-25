@@ -7,27 +7,16 @@ canvas{
 #titulo{
 
     position:absolute;
-
     left:5%;
-
     top:18%;
-
     z-index:10;
-
     color:white;
-
     font-family:"Montserrat", sans-serif;
-
     font-weight:900;
-
     font-size:clamp(38px, 4.5vw, 70px);
-
     line-height:1.02;
-
     letter-spacing:-2px;
-
     text-align:left;
-
     text-shadow:
         3px 3px 6px rgba(0,0,0,0.7);
 }
@@ -37,14 +26,12 @@ canvas{
     display:block;
 }
 
-
 /* LA VIRGEN → GRANDE */
 
 #titulo .virgen{
     font-size:1.35em;
     transform:translateX(20px);
 }
-
 
 /* DEL → PEQUEÑO */
 
@@ -88,41 +75,148 @@ canvas{
     background:rgba(255,255,255,0.45);
     transform:scale(1.05);
 }
-/* =======LOGO ORURO BOLIVIA ============ */
 
-.encabezado{
-    position:fixed;
+/* ===== BOTÓN DÍA / NOCHE ===== */
 
-    top:20px;
-    left:25px;
+.btn-noche{
+    position:absolute;
+    top:80px;
+    right:50px;
+    z-index:1000;
 
-    z-index:9999;
+    width:150px;
+    height:38px;
+
+    background:rgba(70,70,70,0.85);
+
+    border:1px solid rgba(255,255,255,0.6);
+    border-radius:20px;
+
+    color:white;
+
+    font-family:Arial,sans-serif;
+    font-size:14px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    box-shadow:0 3px 8px rgba(0,0,0,0.4);
+
+    transition:0.3s;
 }
 
+.btn-noche:hover{
+    background:rgba(90,90,90,0.95);
+    transform:scale(1.03);
+}
+
+/* =======LOGO ORURO BOLIVIA ============ */
+.encabezado{
+    position:fixed;
+    top:20px;
+    left:25px;
+    z-index:9999;
+}
 .logo{
     font-family:Arial, sans-serif;
-
     font-size:23px;
-
     font-weight:900;
-
     letter: spacing -1px;;
 
     white-space:nowrap;
 }
-
 .oruro{
     color:white;
 }
-
 .bo{
     color:red;
 }
-
 .li{
     color:yellow;
 }
-
 .via{
     color:#00ff00;
+}
+
+/* =========================================
+   BOTÓN ENTRAR AL MUSEO
+   PEQUEÑO Y COLOR PLOMO
+   ========================================= */
+
+.btn-museo{
+    position:absolute;
+
+    width:150px !important;
+    height:38px !important;
+
+    min-width:150px !important;
+    max-width:150px !important;
+
+    min-height:38px !important;
+    max-height:38px !important;
+
+    padding:0 !important;
+    margin:0 !important;
+
+    transform:translate(-50%, -50%) !important;
+    transform-origin:center center !important;
+
+    z-index:9999;
+
+    /* COLOR PLOMO */
+    background:rgba(90,90,90,0.90) !important;
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,0.8);
+    border-radius:20px;
+
+    font-family:Arial,sans-serif;
+    font-size:10px !important;
+    font-weight:bold;
+
+    line-height:38px;
+    text-align:center;
+
+    box-sizing:border-box;
+
+    box-shadow:0 3px 8px rgba(0,0,0,0.40);
+
+    cursor:pointer;
+
+    transition:none !important;
+
+    scale:1 !important;
+}
+
+
+/* NO CAMBIA AL PASAR EL MOUSE */
+
+.btn-museo:hover{
+    width:150px !important;
+    height:38px !important;
+
+    font-size:10px !important;
+
+    background:rgba(90,90,90,0.90) !important;
+
+    transform:translate(-50%, -50%) !important;
+
+    scale:1 !important;
+}
+
+
+/* NO CAMBIA AL HACER CLIC */
+
+.btn-museo:active{
+    width:150px !important;
+    height:38px !important;
+
+    font-size:10px !important;
+
+    background:rgba(90,90,90,0.90) !important;
+
+    transform:translate(-50%, -50%) !important;
+
+    scale:1 !important;
 }
