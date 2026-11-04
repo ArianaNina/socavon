@@ -1,7 +1,10 @@
 import*as THREE from"three";
 import{OrbitControls}from"three/addons/controls/OrbitControls.js";
 import{GLTFLoader}from"three/addons/loaders/GLTFLoader.js";
-
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 // =================================================
 // ESCENA
 // =================================================
@@ -63,7 +66,86 @@ THREE.PCFSoftShadowMap;
 document.body.appendChild(
 renderer.domElement
 );
+// POSTPROCESAMIENTO PARA MEJORAR LA VIRGEN
 
+const composer = new EffectComposer(renderer);
+
+composer.addPass(
+    new RenderPass(scene, camera)
+);
+
+// NITIDEZ SUAVE
+const sharpenPass = new ShaderPass({
+    uniforms: {
+        tDiffuse: { value: null },
+            // RESOLUCION DE LA PANTALLA
+        resolution: {
+            value: new THREE.Vector2(
+                window.innerWidth,
+                window.innerHeight
+            )
+        },
+        amount: { value: 0.45 }
+    },
+
+    vertexShader: `
+        varying vec2 vUv;
+
+        void main(){
+            vUv = uv;
+            gl_Position = projectionMatrix *
+                modelViewMatrix *
+                vec4(position,1.0);
+        }
+    `,
+
+    fragmentShader: `
+        uniform vec2 resolution;
+        uniform sampler2D tDiffuse;
+        uniform float amount;
+        varying vec2 vUv;
+
+        void main(){
+
+        vec2 texel = 1.0 / resolution;
+
+            vec4 color = texture2D(tDiffuse,vUv);
+
+            vec4 arriba = texture2D(
+                tDiffuse,vUv + vec2(0.0,texel.y)
+            );
+
+            vec4 abajo = texture2D(
+                tDiffuse,vUv - vec2(0.0,texel.y)
+            );
+
+            vec4 izquierda = texture2D(
+                tDiffuse,vUv - vec2(texel.x,0.0)
+            );
+
+            vec4 derecha = texture2D(
+                tDiffuse,vUv + vec2(texel.x,0.0)
+            );
+
+            gl_FragColor = color * (1.0 + 4.0 * amount)
+                - (arriba + abajo + izquierda + derecha) * amount;
+        }
+    `
+});
+
+composer.addPass(sharpenPass);
+// BRILLO SUAVE
+const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(
+        window.innerWidth,
+        window.innerHeight
+    ),
+    0.25,
+    0.4,
+    0.85
+);
+
+composer.addPass(bloomPass);
 // =================================================
 // MANITO
 // =================================================
@@ -134,7 +216,7 @@ controls.update();
 const ambientLight=
 new THREE.AmbientLight(
 0xffffff,
-0.6
+0.25
 );
 
 scene.add(ambientLight);
@@ -142,7 +224,7 @@ scene.add(ambientLight);
 const directionalLight=
 new THREE.DirectionalLight(
 0xffffff,
-3
+1.2
 );
 
 directionalLight.position.set(
@@ -164,7 +246,7 @@ scene.add(directionalLight);
 const frontLight=
 new THREE.PointLight(
 0xffffff,
-800,
+100,
 400
 );
 
@@ -179,7 +261,7 @@ scene.add(frontLight);
 const spotLight=
 new THREE.SpotLight(
 0xffffff,
-800
+590
 );
 
 spotLight.position.set(
@@ -200,7 +282,7 @@ scene.add(spotLight);
 const pointLight=
 new THREE.PointLight(
 0x0000ff,
-1800,
+500,
 800
 );
 
@@ -2134,11 +2216,11 @@ model.scale.set(
 
 model.position.set(
 -0.5,
-1.5,
+0.9,
 0
 );
 
-model.rotation.y=
+model.rotation.y= -Math.PI / 2 + 0.2;
 THREE.MathUtils.degToRad(
 -90
 );
@@ -2167,7 +2249,7 @@ obj.material=
 new THREE.MeshPhongMaterial({
 map:textura,
 color:0xffffff,
-shininess:200
+shininess:100
 });
 
 obj.castShadow=true;
@@ -2217,7 +2299,7 @@ console.error(
 }
 
 cargarVirgen(
-"virgin.glb"
+"virgen.glb"
 );
 
 // =================================================
@@ -3019,7 +3101,7 @@ btnNoche.addEventListener(
             lucesBolita.forEach(
                 function(luz){
 
-                    luz.intensity=120;
+                    luz.intensity=90;
 
                 }
             );
@@ -3408,6 +3490,16 @@ renderer.setSize(
 window.innerWidth,
 window.innerHeight
 );
+ // AUMENTAR RESOLUCION DEL POSTPROCESAMIENTO
+        composer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+        sharpenPass.uniforms.resolution.value.set(
+            window.innerWidth,
+            window.innerHeight
+        );
 
 }
 );
