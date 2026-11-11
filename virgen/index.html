@@ -46,6 +46,38 @@
     🌙 NOCHE
 </button>
 
+
+<!-- TRES BOTONES DE INFORMACIÓN -->
+<div class="botones-info-virgen">
+
+    <button class="btn-info" data-info="altura">
+        📏 ALTURA
+    </button>
+
+    <button class="btn-info" data-info="inauguracion">
+        📅 INAUGURACIÓN
+    </button>
+
+    <button class="btn-info" data-info="creadores">
+        🏛️ DISEÑO Y CONSTRUCCIÓN
+    </button>
+
+</div>
+
+<div id="ventanaVirgen" class="ventana-virgen">
+
+    <button id="cerrarInfoVirgen" class="cerrar-info">
+        ×
+    </button>
+
+    <h3 id="tituloInfoVirgen"></h3>
+
+    <p id="textoInfoVirgen"></p>
+
+    <p id="fuenteInfoVirgen" class="fuente"></p>
+
+</div>
+
     <!-- BOTÓN ENTRAR AL MUSEO -->
     <button id="btnMuseo" class="btn-museo">
         ENTRAR AL MUSEO
@@ -54,6 +86,80 @@
 
     <!-- THREE.JS -->
     <script type="module" src="script.js"></script>
+
+<script>
+    // INFORMACIÓN HISTÓRICA DE LA VIRGEN
+    const datosVirgen = {
+
+       altura: {
+    titulo: "ALTURA DEL MONUMENTO",
+
+    texto: "El Monumento Escultórico Virgen del Socavón tiene una altura total de 45,4 metros. La figura de la Virgen mide 36,8 metros y la base tiene 8,60 metros. En su interior, la base alberga una capilla con capacidad para aproximadamente 80 personas.",
+
+    fuente: "Fuente: Decreto Municipal N.º 064 del GAMO y Anuario de la Universidad Católica Boliviana."
+},
+
+        inauguracion: {
+    titulo: "INAUGURACIÓN",
+
+    texto: "La monumental Virgen del Socavón fue inaugurada y bendecida el 1 de febrero de 2013. Está ubicada en el cerro Santa Bárbara, en la ciudad de Oruro, Bolivia, y se convirtió en un importante símbolo de fe, identidad cultural y atractivo turístico.",
+
+    fuente: "Fuente: Periódico La Patria (24 de junio de 2023) y Agencia de Noticias Fides (1 de febrero de 2013)."
+},
+
+      creadores: {
+    titulo: "DISEÑO Y CONSTRUCCIÓN",
+
+    texto: "El diseño estuvo a cargo del arquitecto Jorge Azeñas Zúñiga. La construcción fue realizada por el consorcio Caabol SRL, Navla Ltda. y Formas 21.",
+
+    fuente: "Fuente: Proyecto del Monumento a la Virgen del Socavón, Oruro."
+}
+    };
+
+    const botonesInfo = document.querySelectorAll(".btn-info");
+    const ventanaInfo = document.getElementById("ventanaVirgen");
+    const tituloInfo = document.getElementById("tituloInfoVirgen");
+    const textoInfo = document.getElementById("textoInfoVirgen");
+    const fuenteInfo = document.getElementById("fuenteInfoVirgen");
+    const cerrarInfo = document.getElementById("cerrarInfoVirgen");
+
+    botonesInfo.forEach(function(boton){
+
+        boton.addEventListener("click", function(){
+
+            const tipo = boton.dataset.info;
+            const informacion = datosVirgen[tipo];
+
+            if(!informacion) return;
+
+            tituloInfo.textContent = informacion.titulo;
+            textoInfo.textContent = informacion.texto;
+
+            // MOSTRAR LA FUENTE DE INFORMACIÓN
+            fuenteInfo.textContent = informacion.fuente || "";
+
+            ventanaInfo.classList.add("mostrar");
+        });
+
+    });
+
+    cerrarInfo.addEventListener("click", function(){
+        ventanaInfo.classList.remove("mostrar");
+    });
+
+    // CERRAR AL HACER CLIC FUERA DE LA VENTANA
+    document.addEventListener("click", function(event){
+
+        if(
+            ventanaInfo.classList.contains("mostrar") &&
+            !ventanaInfo.contains(event.target) &&
+            !event.target.closest(".btn-info")
+        ){
+            ventanaInfo.classList.remove("mostrar");
+        }
+
+    });
+</script>
 
 </body>
 
